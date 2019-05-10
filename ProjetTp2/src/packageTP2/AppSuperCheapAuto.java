@@ -10,6 +10,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -17,7 +20,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JRadioButton;
 
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 public class AppSuperCheapAuto extends JFrame {
+	private Ecouteur ec = new Ecouteur();
 	private DefaultTableModel modele;
 	
 	private JPanel panelClient;
@@ -49,9 +59,9 @@ public class AppSuperCheapAuto extends JFrame {
 	private JTextField tfMontantRemis;
 	private JButton btnAnnuNouvComm;
 
-	/**
-	 * Launch the application.
-	 */
+	/*********************************
+	 *             Main              *
+	 *********************************/
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -65,9 +75,9 @@ public class AppSuperCheapAuto extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	/********************************
+	 *        Constructeur          *
+	 ********************************/
 	public AppSuperCheapAuto() {
 		setTitle("Options");
 		setBounds(100, 100, 497, 548);
@@ -221,8 +231,20 @@ public class AppSuperCheapAuto extends JFrame {
 		panelFacture.add(btnAnnuNouvComm);
 		
 		modele.addColumn("Produit");
-		modele.addColumn("QuantitÃ©");
+		modele.addColumn("Quantité");
 		modele.addColumn("Prix");
+		
+		tfNumMembre.addActionListener(ec);
 
+	}
+	
+	public class Ecouteur implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }
