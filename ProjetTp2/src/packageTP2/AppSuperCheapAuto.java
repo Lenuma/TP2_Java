@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -20,6 +25,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JRadioButton;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -58,6 +67,16 @@ public class AppSuperCheapAuto extends JFrame {
 	private JTextField tfMontantDonne;
 	private JTextField tfMontantRemis;
 	private JButton btnAnnuNouvComm;
+	
+	private InputStream inp;
+	private InputStream inp2;
+	private XSSFWorkbook classeurClients;
+	private XSSFSheet feuilleClients;
+	private XSSFWorkbook classeurProduits;
+	private XSSFSheet feuilleProduits;
+	//private XSSFRow rangee;
+	//private XSSFCell cellule;
+	//private XSSFCell celluleTexte;
 
 	/*********************************
 	 *             Main              *
@@ -76,10 +95,11 @@ public class AppSuperCheapAuto extends JFrame {
 	}
 
 	/********************************
-	 *        Constructeur          *
+	 *        Constructeur          
+	 * @throws IOException 
+	 * @throws InvalidFormatException *
 	 ********************************/
-	public AppSuperCheapAuto() {
-		setTitle("Options");
+	public AppSuperCheapAuto() throws InvalidFormatException, IOException {
 		setBounds(100, 100, 497, 548);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -235,6 +255,67 @@ public class AppSuperCheapAuto extends JFrame {
 		modele.addColumn("Prix");
 		
 		tfNumMembre.addActionListener(ec);
+		
+		inp = new FileInputStream ( "Clients.xlsx");
+        classeurClients = ( XSSFWorkbook ) WorkbookFactory.create(inp);
+        feuilleClients = classeurClients.getSheetAt(0);
+        
+        inp2 = new FileInputStream ( "Produits.xlsx");
+        classeurProduits = ( XSSFWorkbook ) WorkbookFactory.create(inp2);
+        feuilleProduits = classeurProduits.getSheetAt(0);
+        
+        DataFormatter dataFormatter = new DataFormatter();
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        
+        for (Row rangee: feuilleClients) {
+        	if (rangee.getRowNum() > 0) {
+        		Cell cellule = rangee.getCell(0);
+        		String numero = dataFormatter.formatCellValue(cellule);
+        		
+            	cellule = rangee.getCell(1);
+            	String nom = dataFormatter.formatCellValue(cellule);
+            	
+            	cellule = rangee.getCell(2);
+            	String p = dataFormatter.formatCellValue(cellule);
+            	int points = Integer.parseInt(p);
+            	
+            	cellule = rangee.getCell(3);
+            	double solde = cellule.getNumericCellValue();
+   
+            	Client c = new Client(numero, nom, points, solde);
+            	EnsembleClients.ajouterClient(c);
+            	
+            	//System.out.println(EnsembleClients.getClient(numero).getSoldeCarteCredit());
+        	}
+        }
+        
+        for (Row rangee: feuilleProduits) {
+        	if (rangee.getRowNum() > 0) {
+        		Cell cellule = rangee.getCell(0);
+        		String c = dataFormatter.formatCellValue(cellule);
+        		int code = Integer.parseInt(c);
+        		
+            	cellule = rangee.getCell(1);
+            	String nom = dataFormatter.formatCellValue(cellule);
+            	
+            	cellule = rangee.getCell(2);
+            	String q = dataFormatter.formatCellValue(cellule);
+            	int quantite = Integer.parseInt(q);
+            	
+            	cellule = rangee.getCell(3);
+            	double prix = cellule.getNumericCellValue();
+            	
+
+            	cellule = rangee.getCell(4);
+            	String pts = dataFormatter.formatCellValue(cellule);
+            	int points = Integer.parseInt(pts);
+   
+            	Produit p = new Produit(code, nom, quantite, prix, points);
+            	Inventaire.ajouterProduit(p);
+            	
+            	System.out.println(Inventaire.getProduit(nom).getNom());
+        	}
+        }
 
 	}
 	
