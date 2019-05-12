@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Iterator;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -20,11 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JRadioButton;
 
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 public class AppSuperCheapAuto extends JFrame {
 	private Ecouteur ec = new Ecouteur();
@@ -231,7 +232,7 @@ public class AppSuperCheapAuto extends JFrame {
 		panelFacture.add(btnAnnuNouvComm);
 		
 		modele.addColumn("Produit");
-		modele.addColumn("Quantité");
+		modele.addColumn("Quantitï¿½");
 		modele.addColumn("Prix");
 		
 		tfNumMembre.addActionListener(ec);
@@ -242,7 +243,8 @@ public class AppSuperCheapAuto extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			
+			
 			
 		}
 		
